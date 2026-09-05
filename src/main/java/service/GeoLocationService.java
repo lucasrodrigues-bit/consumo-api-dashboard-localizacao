@@ -75,12 +75,28 @@ public class GeoLocationService {
 
        //Lendo resposta do envelope
         int status = response.statusCode();
-        String corpo = response.body();
+        String corpoRespostaJsonIp = response.body();
 
        //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
        Gson gson = new Gson();
-       LocalInfo converterJsonParaObjetoLocal = gson.fromJson(corpo, LocalInfo.class);
-       return converterJsonParaObjetoLocal;
+       IpApiResponse converterJsonParaObjetoIp = gson.fromJson(corpoRespostaJsonIp, IpApiResponse.class);
+
+
+       LocalInfo localIp = new LocalInfo(
+               converterJsonParaObjetoIp.getCountry(),
+               converterJsonParaObjetoIp.getCountryCode(),
+               null,                     // state não existe no ip-api
+               converterJsonParaObjetoIp.getRegionName(),
+               converterJsonParaObjetoIp.getCity(),
+               null,                     // neighborhood não existe no ip-api
+               null,                     // street não existe no ip-api
+               null,                     // cep não existe no ip-api
+               converterJsonParaObjetoIp.getRegion(),
+               converterJsonParaObjetoIp.getTimezone(),
+               converterJsonParaObjetoIp.getLat(),
+               converterJsonParaObjetoIp.getLon()
+       );
+       return localIp;
 
    }
 
@@ -101,12 +117,29 @@ public class GeoLocationService {
 
        //Lendo resposta do envelope
        int status = response.statusCode();
-       String corpo = response.body();
+       String corpoRespostaJsonCep = response.body();
 
        //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
         Gson gson = new Gson();
-        LocalInfo converterJsonParaObjetoLocal = gson.fromJson(corpo, LocalInfo.class);
-        return converterJsonParaObjetoLocal;
+        BrasilApiCepResponse converterJsonParaObjetoCep = gson.fromJson(corpoRespostaJsonCep,
+                BrasilApiCepResponse.class);
+
+
+        LocalInfo localCep = new LocalInfo(
+                null,
+                null,
+                converterJsonParaObjetoCep.getState(),
+                null,
+                converterJsonParaObjetoCep.getCity(),
+                converterJsonParaObjetoCep.getNeighborhood(),
+                converterJsonParaObjetoCep.getStreet(),
+                converterJsonParaObjetoCep.getCep(),
+                null,
+                null,
+                null,
+                null
+        );
+        return localCep;
    }
 
 
