@@ -1,81 +1,66 @@
 package model;
 
+import java.util.List;
+
 public class LocalInfo {
-    private String status,country,countryCode,region,regionName,city,zip,timezone;
+    private String country,countryCode,state,regionName,city,zip,cep,neighborhood,street;
 
-
-    public LocalInfo(String status, String contry, String countryCode, String region, String regionName, String city, String zip, String timezone) {
-        this.status = status;
+    public LocalInfo(String contry, String countryCode, String state, String regionName, String city
+                      , String neighborhood, String street)
+    {
         this.country = contry;
         this.countryCode = countryCode;
-        this.region = region;
+
+        this.state = state;
         this.regionName = regionName;
+
         this.city = city;
-        this.zip = zip;
-        this.timezone = timezone;
+        this.neighborhood = neighborhood;
+        this.street = street;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getContry() {
+    public String getCountry() {
         return country;
     }
 
-    public void setContry(String contry) {
-        this.country = contry;
-    }
 
-    public String getCodecontry() {
+    public String getCountryCode() {
         return countryCode;
     }
 
-    public void setCodecontry(String codecontry) {
-        countryCode = codecontry;
+
+    public String getState() {
+        return state;
     }
 
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getRegionName() {
-        return regionName;
-    }
-
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getTimezone() {
-        return timezone;
-    }
-
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
 
     public String getZip() {
         return zip;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+
+    public String getCep() {
+        return cep;
     }
+
+
+    public String getStreet() {
+        return street;
+    }
+
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+
+    public String getCity() {
+        return city;
+    }
+
+
+    public String getRegionName() {
+        return regionName;
+    }
+
 }
