@@ -2,10 +2,18 @@ package service;
 
 //imports
 import java.net.URI;
+
+//imports do Http(faz a requisição e recebe resposta da api)
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+import model.LocalInfo;
+
 import java.io.IOException;
+
+//imports do Gson(faz o parser do Json para objetos)
+import com.google.gson.Gson;
 
 
 public class GeoLocationService {
@@ -67,7 +75,12 @@ public class GeoLocationService {
        //Lendo resposta do envelope
        int status = response.statusCode();
         String corpo = response.body();
-        return corpo;
+
+       //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
+       Gson gson = new Gson();
+       LocalInfo converterJsonParaObjetoLocal = gson.fromJson(corpo, LocalInfo.class);
+       return converterJsonParaObjetoLocal;
+
    }
 
 
@@ -89,6 +102,10 @@ public class GeoLocationService {
        String corpo = response.body();
        return corpo;
 
+       //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
+        Gson gson = new Gson();
+        LocalInfo converterJsonParaObjetoLocal = gson.fromJson(corpo, LocalInfo.class);
+        return converterJsonParaObjetoLocal;
    }
 
 
