@@ -26,59 +26,25 @@ public class LocalInfo {
         this.street = street;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-
-    public String getState() {
-        return state;
-    }
-
-
-
-    public String getCep() {
-        return cep;
-    }
-
-
-    public String getStreet() {
-        return street;
-    }
-
-
-    public String getNeighborhood() {
-        return neighborhood;
-    }
-
-
-    public String getCity() {
-        return city;
-    }
-
-
-    public String getRegionName() {
-        return regionName;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public String getTimezone() {
-        return timezone;
-    }
-
-    public Float getLat() {
-        return lat;
-    }
-
-    public Float getLon() {
-        return lon;
+    /**
+     * Sobreescrita do toString() padrão de Object.Usado para exibir
+     * o resultado da busca de forma legível no console durante os testes.
+     */
+    @Override
+    public String toString(){
+        return "LocalInfo{" +
+                "country='" + country + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", state='" + state + '\'' +
+                ", region='" + region + '\'' +
+                ", regionName='" + regionName + '\'' +
+                ", city='" + city + '\'' +
+                ", cep='" + cep + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", street='" + street + '\'' +
+                ", timezone='" + timezone + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                '}';
     }
 }
