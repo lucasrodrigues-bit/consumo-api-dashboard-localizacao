@@ -43,83 +43,83 @@ public class GeoLocationService {
         return buscarPorIp(entrada);
     }
 
-//------------------------------------------------------------//---------------------------------------------------------
+    //------------------------------------------------------------//---------------------------------------------------------
     //Faz a busca por Ip para caso seja fora do aís(Brasil)
-   private LocalInfo buscarPorIp(String ip) throws IOException, InterruptedException {
+    private LocalInfo buscarPorIp(String ip) throws IOException, InterruptedException {
 
-       //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
-       HttpClient client = HttpClient.newHttpClient();
-
-
-       //Condição que se não for passado nenhum ip,usará o da própria pessoa
-       String urlBase = "http://ip-api.com/json/";
-       String urlFinal;
+        //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
+        HttpClient client = HttpClient.newHttpClient();
 
 
-       //se o ip estiver vazio ou String vazia("") busca com o ip da máquina
-       if (ip == null || ip.isEmpty()) {
+        //Condição que se não for passado nenhum ip,usará o da própria pessoa
+        String urlBase = "http://ip-api.com/json/";
+        String urlFinal;
 
-           urlFinal = urlBase + "?fields=status,message,country,countryCode,region,regionName,city,zip,timezone&lang=pt-BR";
-       }
 
-       //se não, busca com o ip que o usuário digitou
-       else {
-           urlFinal = urlBase + ip + "?fields=status,message,country,countryCode,region,regionName,city,zip,timezone&lang=pt-BR";
-       }
+        //se o ip estiver vazio ou String vazia("") busca com o ip da máquina
+        if (ip == null || ip.isEmpty()) {
 
-       //Enviando envelope(Request)
-       HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlFinal)).GET().build();
+            urlFinal = urlBase + "?fields=status,message,country,countryCode,region,regionName,city,zip,timezone&lang=pt-BR";
+        }
 
-       //Recebendo resposta do envelope(Response)
-       HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+        //se não, busca com o ip que o usuário digitou
+        else {
+            urlFinal = urlBase + ip + "?fields=status,message,country,countryCode,region,regionName,city,zip,timezone&lang=pt-BR";
+        }
 
-       //Lendo resposta do envelope
+        //Enviando envelope(Request)
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlFinal)).GET().build();
+
+        //Recebendo resposta do envelope(Response)
+        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+
+        //Lendo resposta do envelope
         int status = response.statusCode();
         String corpoRespostaJsonIp = response.body();
 
-       //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
-       Gson gson = new Gson();
-       IpApiResponse converterJsonParaObjetoIp = gson.fromJson(corpoRespostaJsonIp, IpApiResponse.class);
+        //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
+        Gson gson = new Gson();
+        IpApiResponse converterJsonParaObjetoIp = gson.fromJson(corpoRespostaJsonIp, IpApiResponse.class);
 
 
-       LocalInfo localIp = new LocalInfo(
-               converterJsonParaObjetoIp.getCountry(),
-               converterJsonParaObjetoIp.getCountryCode(),
-               null,                     // state não existe no ip-api
-               converterJsonParaObjetoIp.getRegionName(),
-               converterJsonParaObjetoIp.getCity(),
-               null,                     // neighborhood não existe no ip-api
-               null,                     // street não existe no ip-api
-               null,                     // cep não existe no ip-api
-               converterJsonParaObjetoIp.getRegion(),
-               converterJsonParaObjetoIp.getTimezone(),
-               converterJsonParaObjetoIp.getLat(),
-               converterJsonParaObjetoIp.getLon()
-       );
-       return localIp;
+        LocalInfo localIp = new LocalInfo(
+                converterJsonParaObjetoIp.getCountry(),
+                converterJsonParaObjetoIp.getCountryCode(),
+                null,                     // state não existe no ip-api
+                converterJsonParaObjetoIp.getRegionName(),
+                converterJsonParaObjetoIp.getCity(),
+                null,                     // neighborhood não existe no ip-api
+                null,                     // street não existe no ip-api
+                null,                     // cep não existe no ip-api
+                converterJsonParaObjetoIp.getRegion(),
+                converterJsonParaObjetoIp.getTimezone(),
+                converterJsonParaObjetoIp.getLat(),
+                converterJsonParaObjetoIp.getLon()
+        );
+        return localIp;
 
-   }
+    }
 
 
 
-//-------------------------------------------------------//-------------------------------------------------------------
-   //Busca por Cep caso seja dentro do país(Brasil)
-   private LocalInfo buscarPorCep(String cep)  throws IOException, InterruptedException {
+    //-------------------------------------------------------//-------------------------------------------------------------
+    //Busca por Cep caso seja dentro do país(Brasil)
+    private LocalInfo buscarPorCep(String cep)  throws IOException, InterruptedException {
 
-       //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
-       HttpClient client = HttpClient.newHttpClient();
+        //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
+        HttpClient client = HttpClient.newHttpClient();
 
-       //Enviando envelope(Request)
-       HttpRequest request = HttpRequest.newBuilder().uri(URI.create( "https://brasilapi.com.br/api/cep/v1/"+cep)).GET().build();
+        //Enviando envelope(Request)
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create( "https://brasilapi.com.br/api/cep/v1/"+cep)).GET().build();
 
-       //Recebendo resposta do envelope(Response)
-       HttpResponse <String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+        //Recebendo resposta do envelope(Response)
+        HttpResponse <String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
 
-       //Lendo resposta do envelope
-       int status = response.statusCode();
-       String corpoRespostaJsonCep = response.body();
+        //Lendo resposta do envelope
+        int status = response.statusCode();
+        String corpoRespostaJsonCep = response.body();
 
-       //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
+        //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
         Gson gson = new Gson();
         BrasilApiCepResponse converterJsonParaObjetoCep = gson.fromJson(corpoRespostaJsonCep,
                 BrasilApiCepResponse.class);
@@ -140,7 +140,7 @@ public class GeoLocationService {
                 null
         );
         return localCep;
-   }
+    }
 
 
 

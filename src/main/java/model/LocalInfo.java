@@ -7,7 +7,7 @@ public class LocalInfo {
     private Float lat,lon;
 
     public LocalInfo(String contry, String countryCode, String state, String regionName, String city
-                      , String neighborhood, String street,String cep,String region,String timezone,Float lat,Float lon)
+            , String neighborhood, String street,String cep,String region,String timezone,Float lat,Float lon)
     {
         this.country = contry;
         this.countryCode = countryCode;
