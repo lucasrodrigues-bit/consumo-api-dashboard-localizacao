@@ -5,7 +5,7 @@ import java.util.List;
 
 //recebendo as respostas dos outros DTO's
 public class WeatherResponseDTO {
-    private List <WeatherInfo> weather;//weather é um objeto com 3 informações dentro
+    private List <Weather> weather;//weather é um objeto com 3 informações dentro
     private Main main;
     private Wind wind;
 
@@ -13,7 +13,7 @@ public class WeatherResponseDTO {
 
     }
 
-    public List<WeatherInfo> getWeather() {
+    public List<Weather> getWeather() {
         return weather;
     }
 
