@@ -2,10 +2,10 @@ package model;
 
 public class WeatherInfo {
     private String description,main;
-    private int temp,feels_like,temp_min,temp_max,speed;
+    private double temp,feels_like,temp_min,temp_max,speed;
 
     //configurando o objeto para receber todos os atributos da resposta da API
-    public WeatherInfo(String description, String main, int temp, int feels_like, int temp_min, int temp_max, int speed) {
+    public WeatherInfo(String description, String main, double temp, double feels_like, double temp_min, double temp_max, double speed) {
         this.description = description;
         this.main = main;
         this.temp = temp;
@@ -20,26 +20,26 @@ public class WeatherInfo {
 
     public String getMain() {return main;}
 
-    public int getTemp() {return temp;}
+    public double getTemp() {return temp;}
 
-    public int getFeels_like() {return feels_like;}
+    public double getFeels_like() {return feels_like;}
 
-    public int getTemp_min() {return temp_min;}
+    public double getTemp_min() {return temp_min;}
 
-    public int getTemp_max() {return temp_max;}
+    public double getTemp_max() {return temp_max;}
 
-    public int getSpeed() {return speed;}
+    public double getSpeed() {return speed;}
 
     @Override
     public String toString(){
-        return "Dados Meterológicos"+
-                "Clima:"+getMain()+
-                "Descrição:"+getDescription()+
-                "Temperatura:"+getTemp()+
-                "Sensação Térmica:"+getFeels_like()+
-                "Temperatura máxima:"+getTemp_max()+
-                "Temperatura mínima"+getTemp_min()+
-                "Velocidade do veento:"+getSpeed();
+        return "Dados Meterológicos\n"+
+                "Clima:"+getMain()+"\n"+
+                "Descrição:"+getDescription()+"\n"+
+                "Temperatura:"+getTemp()+"°C\n"+
+                "Sensação Térmica:"+getFeels_like()+"°C\n"+
+                "Temperatura máxima:"+getTemp_max()+"°C\n"+
+                "Temperatura mínima"+getTemp_min()+"°C\n"+
+                "Velocidade do vento:"+getSpeed()+"m/s";
     }
 }
 
