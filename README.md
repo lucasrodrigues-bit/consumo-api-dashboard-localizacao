@@ -10,7 +10,7 @@ Esse é o primeiro projeto de uma sequência de portfólio voltada a backend Jav
 ✅ Modelagem do banco de dados (DER)
 ✅ `GeoLocationService` — busca por IP e por CEP, com unificação de resposta
 ⬜ Persistência (histórico de consultas, cache de câmbio/feriados)
-⬜ `WeatherService` (OpenWeather)
+✅ `WeatherService` (OpenWeather)
 ⬜ `CurrencyService` (câmbio)
 ⬜ `HolidayService` (feriados)
 ⬜ Orquestração das buscas em paralelo
