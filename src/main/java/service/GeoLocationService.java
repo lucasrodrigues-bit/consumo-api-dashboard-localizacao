@@ -1,46 +1,42 @@
 package service;
 
 //imports
-import java.net.URI;
 
-//imports do Http(faz a requisição e recebe resposta da api)
+import com.google.gson.Gson;
+import model.LocalInfo;
+import model.dto.Local.BrasilApiCepResponse;
+import model.dto.Local.IpApiResponse;
+
+import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import model.LocalInfo;
-
-import java.io.IOException;
-
-//imports do Gson(faz o parser do Json para objetos)
-import com.google.gson.Gson;
-import model.dto.Local.BrasilApiCepResponse;
-import model.dto.Local.IpApiResponse;
-
 
 public class GeoLocationService {
 
-    //Método que indentifica se a busca é por Ip ou Cep
-    public LocalInfo buscarLocal(String entrada) throws IOException, InterruptedException {
+    //indentifica se a busca é por Ip ou Cep
+    public LocalInfo buscarLocal(String localidade) throws IOException, InterruptedException {
 
-        //Decidindo se a busca é por ip ou cep
-        if (entrada != null && !entrada.isEmpty()) {
+        //Decidindo se a busca é por ip ou cep§
+        if (localidade != null && !localidade.isEmpty()) {
 
-            if (entrada.contains(".")) {
-                LocalInfo resultado_BuscaIp = buscarPorIp(entrada);
+            if (localidade.contains(".")) {
+                LocalInfo resultado_BuscaIp = buscarPorIp(localidade);
                 return resultado_BuscaIp;
 
             }
 
             else {
-                LocalInfo resultado_BuscaCep = buscarPorCep(entrada);
+                LocalInfo resultado_BuscaCep = buscarPorCep(localidade);
                 return resultado_BuscaCep;
 
             }
         }
 
         //caso não digite nada busca pelo ip da própria máquina
-        return buscarPorIp(entrada);
+        return buscarPorIp(localidade);
     }
 
     //------------------------------------------------------------//---------------------------------------------------------
@@ -77,24 +73,24 @@ public class GeoLocationService {
         int status = response.statusCode();
         String corpoRespostaJsonIp = response.body();
 
-        //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
+        //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo---Desserilização
         Gson gson = new Gson();
-        IpApiResponse converterJsonParaObjetoIp = gson.fromJson(corpoRespostaJsonIp, IpApiResponse.class);
+        IpApiResponse localPeloIp = gson.fromJson(corpoRespostaJsonIp, IpApiResponse.class);
 
-
+        //Atribuindo
         LocalInfo localIp = new LocalInfo(
-                converterJsonParaObjetoIp.getCountry(),
-                converterJsonParaObjetoIp.getCountryCode(),
+                localPeloIp.getCountry(),
+                localPeloIp.getCountryCode(),
                 null,                     // state não existe no ip-api
-                converterJsonParaObjetoIp.getRegionName(),
-                converterJsonParaObjetoIp.getCity(),
+                localPeloIp.getRegionName(),
+                localPeloIp.getCity(),
                 null,                     // neighborhood não existe no ip-api
                 null,                     // street não existe no ip-api
                 null,                     // cep não existe no ip-api
-                converterJsonParaObjetoIp.getRegion(),
-                converterJsonParaObjetoIp.getTimezone(),
-                converterJsonParaObjetoIp.getLat(),
-                converterJsonParaObjetoIp.getLon()
+                localPeloIp.getRegion(),
+                localPeloIp.getTimezone(),
+                localPeloIp.getLat(),
+                localPeloIp.getLon()
         );
         return localIp;
 
@@ -105,6 +101,7 @@ public class GeoLocationService {
     //-------------------------------------------------------//-------------------------------------------------------------
     //Busca por Cep caso seja dentro do país(Brasil)
     private LocalInfo buscarPorCep(String cep)  throws IOException, InterruptedException {
+
 
         //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
         HttpClient client = HttpClient.newHttpClient();
@@ -121,19 +118,19 @@ public class GeoLocationService {
 
         //Converte resposta do envelope(Json) em Objeto para a classe LocalInfo
         Gson gson = new Gson();
-        BrasilApiCepResponse converterJsonParaObjetoCep = gson.fromJson(corpoRespostaJsonCep,
+        BrasilApiCepResponse localPeloCep = gson.fromJson(corpoRespostaJsonCep,
                 BrasilApiCepResponse.class);
 
 
         LocalInfo localCep = new LocalInfo(
                 null,
                 null,
-                converterJsonParaObjetoCep.getState(),
+                localPeloCep.getState(),
                 null,
-                converterJsonParaObjetoCep.getCity(),
-                converterJsonParaObjetoCep.getNeighborhood(),
-                converterJsonParaObjetoCep.getStreet(),
-                converterJsonParaObjetoCep.getCep(),
+                localPeloCep.getCity(),
+                localPeloCep.getNeighborhood(),
+                localPeloCep.getStreet(),
+                localPeloCep.getCep(),
                 null,
                 null,
                 null,
