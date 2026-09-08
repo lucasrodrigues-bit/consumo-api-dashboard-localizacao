@@ -1,4 +1,4 @@
-package model.dto;
+package model.dto.Local;
 
 public class IpApiResponse {
     private String countryCode,country,regionName,city,region,timezone;

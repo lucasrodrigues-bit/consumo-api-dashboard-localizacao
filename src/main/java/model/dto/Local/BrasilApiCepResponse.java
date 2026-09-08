@@ -1,6 +1,4 @@
-package model.dto;
-
-import com.google.gson.Gson;
+package model.dto.Local;
 
 public class BrasilApiCepResponse {
     private String cep,state,city,neighborhood,street;

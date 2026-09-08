@@ -14,8 +14,8 @@ import java.io.IOException;
 
 //imports do Gson(faz o parser do Json para objetos)
 import com.google.gson.Gson;
-import model.dto.BrasilApiCepResponse;
-import model.dto.IpApiResponse;
+import model.dto.Local.BrasilApiCepResponse;
+import model.dto.Local.IpApiResponse;
 
 
 public class GeoLocationService {

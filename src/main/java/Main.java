@@ -11,7 +11,7 @@ public class Main {
         //Tratamento de exeções
         try {
 
-            System.out.println("Digite o ip ou cep desejado:");
+            System.out.println("Digite o ip ou cep(Brasil) desejado:");
             String entrada = input.nextLine();
 
             //chama a função direto classe GeoLocationService()
