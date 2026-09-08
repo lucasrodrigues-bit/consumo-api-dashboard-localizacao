@@ -21,7 +21,7 @@ public class WeatherService {
 
         //Configurando requisição Http
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.openweathermap.org/data/2.5/weather?q="+localidade+"&appid="+api_key+"&lang=pt_br")).GET().build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.openweathermap.org/data/2.5/weather?q="+localidade+"&appid="+api_key+"&lang=pt_br"+"&units=metric")).GET().build();
         HttpResponse <String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
 
         //colocando o corpo da requisição e o status dela em variáveis

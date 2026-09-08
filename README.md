@@ -43,7 +43,7 @@ Camadas separadas por responsabilidade:
 - **`model`** — classes de dado. Inclui o modelo de domínio unificado (`LocalInfo`) e os DTOs (`model.dto`) que espelham exatamente o formato de cada API externa.
 - **`service`** — lógica de negócio e integração com APIs externas. Cada service sabe montar a URL, chamar a API e mapear o resultado para o modelo unificado.
 - **`db`** *(planejado)* — acesso ao banco via JDBC.
-- **`Main`** — ponto de entrada, exercitando os services via console.
+- **`Application`** — ponto de entrada, exercitando os services via console.
 
 ### Por que existe um DTO e um modelo unificado separados
 
@@ -68,14 +68,14 @@ src/main/java/
   service/
     GeoLocationService.java
   db/            (ainda vazio — persistência a implementar)
-  Main.java
+  Application.java
 ```
 
 ## Como rodar
 
 1. Clonar o repositório e abrir no IntelliJ como projeto Maven.
 2. Ter o MySQL instalado localmente (Windows) e o banco `api_dashboard` criado (script SQL em desenvolvimento).
-3. Rodar `Main.java` — o programa pede um CEP ou IP no console e imprime o resultado.
+3. Rodar `Application.java` — o programa pede um CEP ou IP no console e imprime o resultado.
 
 ## Roadmap
 
