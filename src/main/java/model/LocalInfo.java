@@ -32,7 +32,7 @@ public class LocalInfo {
      */
     @Override
     public String toString(){
-        return "LocalInfo{" +
+        return
                 "country='" + country + '\'' +
                 ", countryCode='" + countryCode + '\'' +
                 ", state='" + state + '\'' +
