@@ -42,9 +42,7 @@ public class WeatherService {
                 clima.getMain().getTemp_min(),
                 clima.getMain().getTemp_max(),
                 clima.getWind().getSpeed()
-                ){
-
-        };return dadosMeteorologicos;
+                );return dadosMeteorologicos;
 
     }
 
