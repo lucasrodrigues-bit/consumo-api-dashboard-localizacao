@@ -8,9 +8,11 @@ import model.dto.Weather.WeatherResponseDTO;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 public class WeatherService {
 
@@ -21,7 +23,9 @@ public class WeatherService {
 
         //Configurando requisição Http
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.openweathermap.org/data/2.5/weather?q="+localidade+"&appid="+api_key+"&lang=pt_br"+"&units=metric")).GET().build();
+        String cidadeCodificadaParaUrl = URLEncoder.encode(localidade, StandardCharsets.UTF_8);
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.openweathermap.org/data/2" +
+                ".5/weather?q="+cidadeCodificadaParaUrl+"&appid="+api_key+"&lang=pt_br"+"&units=metric")).GET().build();
         HttpResponse <String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
 
         //colocando o corpo da requisição e o status dela em variáveis
