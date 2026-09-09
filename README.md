@@ -11,7 +11,7 @@ Esse é o primeiro projeto de uma sequência de portfólio voltada a backend Jav
 ✅ `GeoLocationService` — busca por IP e por CEP, com unificação de resposta
 ⬜ Persistência (histórico de consultas, cache de câmbio/feriados)
 ✅ `WeatherService` (OpenWeather)
-⬜ `CurrencyService` (câmbio)
+✅ `CurrencyService` (câmbio)
 ⬜ `HolidayService` (feriados)
 ⬜ Orquestração das buscas em paralelo
 ⬜ Front mínimo de exibição
@@ -32,8 +32,8 @@ Esse é o primeiro projeto de uma sequência de portfólio voltada a backend Jav
 |---|--------------------------------|---|
 | Localização por IP | [ip-api.com](http://ip-api.com)| Usa o IP de quem chama se nenhum for informado |
 | Localização por CEP | [BrasilAPI](https://brasilapi.com.br/docs) | Endpoint `/api/cep/v1/{cep}` |
-| Clima | [OpenWeather](https://openweathermap.org) | Ainda não implementado |
-| Câmbio | [AwesomeApi](https://awesomeapi.com.br) | Ainda não implementado |
+| Clima | [OpenWeather](https://api.openweathermap.org) | Endpoint `/data/2.5/weather?q={cityname}&appid={API key}` |
+| Câmbio | [AwesomeApi](https://economia.awesomeapi.com.br) | Endpoint `/json/last/:moedas` |
 | Feriados | BrasilAPI (nacional) / Calendarific (internacional) | Ainda não implementado |
 
 ## Arquitetura
