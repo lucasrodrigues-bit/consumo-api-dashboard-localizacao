@@ -120,20 +120,22 @@ public class GeoLocationService {
                 BrasilApiCepResponse.class);
 
 
-        LocalInfo localCep = new LocalInfo(
-                null,
-                null,
-                localPeloCep.getState(),
-                null,
-                localPeloCep.getCity(),
-                localPeloCep.getNeighborhood(),
-                localPeloCep.getStreet(),
-                localPeloCep.getCep(),
-                null,
-                null,
-                null,
-                null
-        );
+        LocalInfo localCep = new LocalInfo
+                (
+                        "Brasil",
+                        "BR",
+                        localPeloCep.getState(),
+                        null,
+                        localPeloCep.getCity(),
+                        localPeloCep.getNeighborhood(),
+                        localPeloCep.getStreet(),
+                        localPeloCep.getCep(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        "BRL"
+                );
         return localCep;
     }
 
