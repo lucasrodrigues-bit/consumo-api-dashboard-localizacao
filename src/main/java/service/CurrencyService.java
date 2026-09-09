@@ -27,9 +27,21 @@ public class CurrencyService {
             String corpoRespostaJson = response.body();
 
             Gson gson = new Gson();
-            Type tipoMapa = new TypeToken<Map<String, CurrencyRateResponse>>() {
-            }.getType();
-            Map<String, CurrencyRateResponse> mapa = gson.fromJson(corpoRespostaJson, tipoMapa);
+
+            Type tipoMapa = new TypeToken<Map<String, CurrencyRateResponse>>() {}.getType();
+
+            Map<String, CurrencyRateResponse> mapa;
+            try {
+                mapa = gson.fromJson(corpoRespostaJson, tipoMapa);
+            } catch (IllegalStateException e) {
+                // A AwesomeAPI não devolveu o formato esperado — geralmente significa
+                // que a moeda pedida não está entre as que ela cobre
+                throw new IOException("Moeda não suportada: " + moedaOrigem, e);
+            }
+
+            if (mapa == null || mapa.isEmpty()) {
+                throw new IOException("Moeda não suportada: " + moedaOrigem);
+            }
 
             //pegando valor dentro do Map
             CurrencyRateResponse resposta = mapa.values().iterator().next();
