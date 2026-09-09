@@ -162,19 +162,34 @@ public class GeoLocationService {
         }
         GeocodingResponseDTO localizacao = resultadosGeo[0];
 
-        // 2º: countryCode -> moeda oficial do país, via restcountries.com
+        // 2º: countryCode -> moeda oficial do país, via restcountries.com (com fallback se falhar)
         String urlPais = "https://restcountries.com/v3.1/alpha/" + localizacao.getCountry() + "?fields=name,currencies";
         HttpRequest requestPais = HttpRequest.newBuilder().uri(URI.create(urlPais)).GET().build();
         HttpResponse<String> responsePais = client.send(requestPais, HttpResponse.BodyHandlers.ofString());
 
-        RestCountriesResponseDTO dadosPais = gson.fromJson(responsePais.body(), RestCountriesResponseDTO.class);
-
-        String nomePais = (dadosPais.getName() != null) ? dadosPais.getName().getCommon() : null;
-
+        String nomePais = null;
         String codigoMoeda = null;
-        if (dadosPais.getCurrencies() != null && !dadosPais.getCurrencies().isEmpty()) {
-            // pega a primeira (e geralmente única) chave do Map de moedas, sem saber o nome dela de antemão
-            codigoMoeda = dadosPais.getCurrencies().keySet().iterator().next();
+
+        try {
+            RestCountriesResponseDTO dadosPais = gson.fromJson(responsePais.body(), RestCountriesResponseDTO.class);
+
+            nomePais = (dadosPais.getName() != null) ? dadosPais.getName().getCommon() : null;
+
+            if (dadosPais.getCurrencies() != null && !dadosPais.getCurrencies().isEmpty()) {
+                codigoMoeda = dadosPais.getCurrencies().keySet().iterator().next();
+            }
+        } catch (IllegalStateException e) {
+            // restcountries.com falhou (instabilidade conhecida) -> tenta a lista fixa de fallback
+            PaisFallback fallback = ListaPaisesFallback.buscar(localizacao.getCountry());
+
+            if (fallback != null) {
+                nomePais = fallback.getNome();
+                codigoMoeda = fallback.getMoeda();
+            } else {
+                System.out.println("Aviso de cobertura: país '" + localizacao.getCountry() +
+                        "' não está na lista de fallback (API externa indisponível no momento). " +
+                        "Nome completo e moeda não disponíveis nessa consulta.");
+            }
         }
 
         return new LocalInfo(
