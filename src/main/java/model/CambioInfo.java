@@ -16,4 +16,9 @@ public class CambioInfo {
     public String getCode() {
         return code;
     }
+
+    @Override
+    public String toString() {
+        return "CambioInfo{code='" + code + "', valor=" + ValorMoeda + '}';
+    }
 }
