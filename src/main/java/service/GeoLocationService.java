@@ -6,6 +6,9 @@ package service;
 
 import com.google.gson.Gson;
 import model.LocalInfo;
+import model.dto.Local.PaisFallback;
+import model.dto.Local.ListaPaisesFallback;
+import model.LocalInfo;
 import model.dto.Local.BrasilApiCepResponse;
 import model.dto.Local.IpApiResponse;
 import model.dto.Local.GeocodingResponseDTO;
@@ -13,9 +16,11 @@ import model.dto.Local.RestCountriesResponseDTO;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 
 public class GeoLocationService {
@@ -144,12 +149,12 @@ public class GeoLocationService {
         String apiKey = System.getenv("OPENWEATHER_API_KEY");
 
         // 1º: nome -> lat/lon/countryCode, via Geocoding API do OpenWeather
-        String urlGeocoding = "https://api.openweathermap.org/geo/1.0/direct?q=" + nome + "&limit=1&appid=" + apiKey;
+        String cidadeCodificadaParaUrl = URLEncoder.encode(nome, StandardCharsets.UTF_8);
+        String urlGeocoding = "https://api.openweathermap.org/geo/1.0/direct?q=" + cidadeCodificadaParaUrl + "&limit=1&appid=" + apiKey;
         HttpRequest requestGeo = HttpRequest.newBuilder().uri(URI.create(urlGeocoding)).GET().build();
         HttpResponse<String> responseGeo = client.send(requestGeo, HttpResponse.BodyHandlers.ofString());
 
         Gson gson = new Gson();
-        // resposta é um array -> parse pra array de DTO, não pra um objeto só
         GeocodingResponseDTO[] resultadosGeo = gson.fromJson(responseGeo.body(), GeocodingResponseDTO[].class);
 
         if (resultadosGeo == null || resultadosGeo.length == 0) {
