@@ -26,9 +26,7 @@ public class Application {
             System.out.println(local);
 
             // 2º: usa a cidade já resolvida (não pede de novo pro usuário)
-            //Nome da cidade sendo codificado para URL.
-            String cidadeCodificada = URLEncoder.encode(local.getCity(), StandardCharsets.UTF_8);
-            WeatherInfo clima = weatherService.DadosMeteorologicos(cidadeCodificada);
+            WeatherInfo clima = weatherService.DadosMeteorologicos(local.getCity());
             System.out.println(clima);
 
             // 3º: usa a moeda já resolvida (BRL fixo se for CEP, código do país se for IP)
