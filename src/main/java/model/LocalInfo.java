@@ -3,15 +3,17 @@ package model;
 import java.util.List;
 
 public class LocalInfo {
-    private String country,countryCode,state,region,timezone,regionName,city,cep,neighborhood,street;
+    private String country,countryCode,state,region,timezone,regionName,city,cep,neighborhood,street,currency;
     private Float lat,lon;
 
     public LocalInfo(String contry, String countryCode, String state, String regionName, String city
-            , String neighborhood, String street,String cep,String region,String timezone,Float lat,Float lon)
+            , String neighborhood, String street, String cep, String region, String timezone, Float lat, Float lon, String currency)
     {
         this.country = contry;
         this.countryCode = countryCode;
         this.region = region;
+
+        this.currency = currency;
 
         this.timezone = timezone;
         this.lat = lat;
@@ -25,6 +27,59 @@ public class LocalInfo {
         this.neighborhood = neighborhood;
         this.street = street;
     }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public Float getLat() {
+        return lat;
+    }
+
+    public Float getLon() {
+        return lon;
+    }
+
 
     /**
      * Sobreescrita do toString() padrão de Object.Usado para exibir
@@ -45,6 +100,6 @@ public class LocalInfo {
                 ", timezone='" + timezone + '\'' +
                 ", lat=" + lat +
                 ", lon=" + lon +
-                '}';
+                "Currency:"+currency;
     }
 }
