@@ -139,9 +139,54 @@ public class GeoLocationService {
         return localCep;
     }
 
+    private LocalInfo buscarPorNome(String nome) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        String apiKey = System.getenv("OPENWEATHER_API_KEY");
 
+        // 1º: nome -> lat/lon/countryCode, via Geocoding API do OpenWeather
+        String urlGeocoding = "https://api.openweathermap.org/geo/1.0/direct?q=" + nome + "&limit=1&appid=" + apiKey;
+        HttpRequest requestGeo = HttpRequest.newBuilder().uri(URI.create(urlGeocoding)).GET().build();
+        HttpResponse<String> responseGeo = client.send(requestGeo, HttpResponse.BodyHandlers.ofString());
 
+        Gson gson = new Gson();
+        // resposta é um array -> parse pra array de DTO, não pra um objeto só
+        GeocodingResponseDTO[] resultadosGeo = gson.fromJson(responseGeo.body(), GeocodingResponseDTO[].class);
 
+        if (resultadosGeo == null || resultadosGeo.length == 0) {
+            throw new IOException("Nenhum local encontrado para: " + nome);
+        }
+        GeocodingResponseDTO localizacao = resultadosGeo[0];
 
+        // 2º: countryCode -> moeda oficial do país, via restcountries.com
+        String urlPais = "https://restcountries.com/v3.1/alpha/" + localizacao.getCountry() + "?fields=name,currencies";
+        HttpRequest requestPais = HttpRequest.newBuilder().uri(URI.create(urlPais)).GET().build();
+        HttpResponse<String> responsePais = client.send(requestPais, HttpResponse.BodyHandlers.ofString());
+
+        RestCountriesResponseDTO dadosPais = gson.fromJson(responsePais.body(), RestCountriesResponseDTO.class);
+
+        String nomePais = (dadosPais.getName() != null) ? dadosPais.getName().getCommon() : null;
+
+        String codigoMoeda = null;
+        if (dadosPais.getCurrencies() != null && !dadosPais.getCurrencies().isEmpty()) {
+            // pega a primeira (e geralmente única) chave do Map de moedas, sem saber o nome dela de antemão
+            codigoMoeda = dadosPais.getCurrencies().keySet().iterator().next();
+        }
+
+        return new LocalInfo(
+                nomePais,
+                localizacao.getCountry(),
+                localizacao.getState(),
+                null,                          // regionName não existe nessa fonte
+                localizacao.getName(),
+                null,                          // neighborhood
+                null,                          // street
+                null,                          // cep
+                null,                          // region
+                null,                          // timezone (geocoding não devolve)
+                (float) localizacao.getLat(),
+                (float) localizacao.getLon(),
+                codigoMoeda
+        );
+    }
 }
 
