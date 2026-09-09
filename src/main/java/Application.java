@@ -9,6 +9,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import service.HolidayService;
+import model.FeriadoInfo;
+
 public class Application {
     public static void main(String[] args) {
 
@@ -16,6 +19,7 @@ public class Application {
         GeoLocationService geoService = new GeoLocationService();
         WeatherService weatherService = new WeatherService();
         CurrencyService currencyService = new CurrencyService();
+        HolidayService holidayService = new HolidayService();
 
         try {
             System.out.println("Digite o ip,cep(Brasil) ou nome da cidade desejada:");
@@ -33,8 +37,12 @@ public class Application {
             CambioInfo cambio = currencyService.ConversorDeMoedas(local.getCurrency());
             System.out.println(cambio);
 
+            FeriadoInfo feriado = holidayService.buscarFeriados(local.getCountryCode());
+            System.out.println(feriado);
+
         } catch (Exception e) {
             System.out.println("Deu erro: " + e.getMessage());
         }
+
     }
 }
