@@ -53,12 +53,14 @@ public class GeoLocationService {
         //se o ip estiver vazio ou String vazia("") busca com o ip da máquina
         if (ip == null || ip.isEmpty()) {
 
-            urlFinal = urlBase + "?fields=status,message,country,countryCode,region,regionName,city,zip,timezone&lang=pt-BR";
+            urlFinal = urlBase + "?fields=currency,status,message,country,countryCode,region,regionName,city,zip," +
+                    "timezone&lang=pt-BR";
         }
 
         //se não, busca com o ip que o usuário digitou
         else {
-            urlFinal = urlBase + ip + "?fields=status,message,country,countryCode,region,regionName,city,zip,timezone&lang=pt-BR";
+            urlFinal = urlBase + ip + "?fields=currency,status,message,country,countryCode,region,regionName,city,zip," +
+                    "timezone&lang=pt-BR";
         }
 
         //Enviando envelope(Request)
@@ -88,7 +90,8 @@ public class GeoLocationService {
                 localPeloIp.getRegion(),
                 localPeloIp.getTimezone(),
                 localPeloIp.getLat(),
-                localPeloIp.getLon()
+                localPeloIp.getLon(),
+                localPeloIp.getCurrency()
         );
         return localIp;
 
