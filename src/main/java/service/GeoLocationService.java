@@ -1,11 +1,15 @@
-package service;
+
 
 //imports
+
+package service;
 
 import com.google.gson.Gson;
 import model.LocalInfo;
 import model.dto.Local.BrasilApiCepResponse;
 import model.dto.Local.IpApiResponse;
+import model.dto.Local.GeocodingResponseDTO;
+import model.dto.Local.RestCountriesResponseDTO;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,32 +19,26 @@ import java.net.http.HttpResponse;
 
 
 public class GeoLocationService {
-
     //indentifica se a busca é por Ip ou Cep
     public LocalInfo buscarLocal(String localidade) throws IOException, InterruptedException {
 
-        //Decidindo se a busca é por ip ou cep§
-        if (localidade != null && !localidade.isEmpty()) {
-
-            if (localidade.contains(".")) {
-                LocalInfo resultado_BuscaIp = buscarPorIp(localidade);
-                return resultado_BuscaIp;
-
-            }
-
-            else {
-                LocalInfo resultado_BuscaCep = buscarPorCep(localidade);
-                return resultado_BuscaCep;
-
-            }
+        //Decidindo se a busca é por ip ou cep
+        if (localidade == null || localidade.isEmpty()) {
+            return buscarPorIp(localidade); // sem entrada -> usa o IP de quem chamou
         }
 
-        //caso não digite nada busca pelo ip da própria máquina
-        return buscarPorIp(localidade);
+        if (localidade.contains(".")) {
+            return buscarPorIp(localidade);
+        }
+
+        if (localidade.matches("\\d+")) {
+            return buscarPorCep(localidade);
+        }
+        return buscarPorNome(localidade);
+
     }
 
-    //------------------------------------------------------------//---------------------------------------------------------
-    //Faz a busca por Ip para caso seja fora do aís(Brasil)
+    //Faz a busca por Ip para caso seja fora do país(Brasil)
     private LocalInfo buscarPorIp(String ip) throws IOException, InterruptedException {
 
         //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
@@ -96,9 +94,6 @@ public class GeoLocationService {
 
     }
 
-
-
-    //-------------------------------------------------------//-------------------------------------------------------------
     //Busca por Cep caso seja dentro do país(Brasil)
     private LocalInfo buscarPorCep(String cep)  throws IOException, InterruptedException {
 
