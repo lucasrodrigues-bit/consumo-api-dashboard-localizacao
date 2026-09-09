@@ -1,7 +1,7 @@
 package model.dto.Local;
 
 public class BrasilApiCepResponse {
-    private String cep,state,city,neighborhood,street;
+    private String cep,state,city,neighborhood,street,currency;
 
 
     public String getCep() {
@@ -23,4 +23,6 @@ public class BrasilApiCepResponse {
     public String getStreet() {
         return street;
     }
+
+    public String getCurrency(){return currency;}
 }
