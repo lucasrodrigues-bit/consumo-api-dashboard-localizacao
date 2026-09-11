@@ -6,6 +6,9 @@ import model.dto.Holiday.BrasilApiFeriadoDTO;
 import model.dto.Holiday.CalendarificHolidayDTO;
 import model.dto.Holiday.CalendarificResponseDTO;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -52,8 +55,14 @@ public class HolidayService {
     private FeriadoInfo buscarFeriadosCalendarific(String countryCode, int ano) throws IOException, InterruptedException {
         String apiKey = System.getenv("CALENDARIFIC_API_KEY");
         HttpClient client = HttpClient.newHttpClient();
-        String url = "https://calendarific.com/api/v2/holidays?api_key=" + apiKey
-                + "&country=" + countryCode + "&year=" + ano;
+        String encodedKey = URLEncoder.encode(apiKey.trim(), StandardCharsets.UTF_8);
+        String encodedCountry = URLEncoder.encode(countryCode.trim(), StandardCharsets.UTF_8);
+
+        String url = "https://calendarific.com/api/v2/holidays?api_key=" + encodedKey
+                + "&country=" + encodedCountry
+                + "&year=" + ano
+                + "&type=national&language=pt";
+
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
