@@ -75,22 +75,26 @@ Nomes de cidades brasileiras funcionam nativamente. Para cidades estrangeiras co
 
 ```
 src/main/java/
+
+  db/            (ainda vazio — persistência a implementar)
   model/
     LocalInfo.java
     WeatherInfo.java
     CambioInfo.java
     FeriadoInfo.java
-    PaisFallback.java
-    PaisesFallback.java
-    ExonimosCidades.java
     dto/
       Local/
         IpApiResponse.java
         BrasilApiCepResponse.java
         GeocodingResponseDTO.java
         RestCountriesResponseDTO.java
+        PaisFallback.java
+        ListaPaisesFallback.java
       Weather/
         WeatherResponseDTO.java
+        Main.java
+        Weather.java
+        Wind.java
       Currency/
         CurrencyRateResponse.java
       Holiday/
@@ -102,14 +106,13 @@ src/main/java/
     WeatherService.java
     CurrencyService.java
     HolidayService.java
-  db/            (ainda vazio — persistência a implementar)
-  Application.java
+  
 ```
 
 ## Como rodar
 
 1. Clonar o repositório e abrir no IntelliJ como projeto Maven.
-2. Configurar as variáveis de ambiente `OPENWEATHER_API_KEY` e `CALENDARIFIC_API_KEY` (na configuração de execução do IntelliJ, ou nas variáveis de ambiente do Windows).
+2. Configurar as variáveis de ambiente `OPENWEATHER_API_KEY`,`AWESOMEAPI_API_KEY` e `CALENDARIFIC_API_KEY` (na configuração de execução do IntelliJ(Run), ou nas variáveis de ambiente do Windows).
 3. Rodar `Application.java` — o programa pede um CEP, IP ou nome de cidade/país no console e imprime localização, clima, câmbio e feriados em sequência.
 4. (Banco de dados ainda não é necessário para rodar — a persistência está no roadmap.)
 
