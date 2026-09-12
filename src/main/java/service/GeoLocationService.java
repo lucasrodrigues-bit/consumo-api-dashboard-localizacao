@@ -196,12 +196,6 @@ public class GeoLocationService {
         );
 
 
-        // Logs temporários
-        System.out.println("Status OpenWeather: " + responseGeo.statusCode());
-        System.out.println("Resposta OpenWeather:");
-        System.out.println(responseGeo.body());
-
-
         Gson gson = new Gson();
 
         GeocodingResponseDTO[] resultadosGeo =
@@ -224,22 +218,14 @@ public class GeoLocationService {
         // =========================================================
 
         String urlPais =
-                "https://api.restcountries.com/countries/v5?q=" +
-                        URLEncoder.encode(
-                                localizacao.getCountry(),
-                                StandardCharsets.UTF_8
-                        );
-
+                "https://api.restcountries.com/countries/v5/codes.alpha_2/" +
+                        localizacao.getCountry();
 
         HttpRequest requestPais = HttpRequest.newBuilder()
                 .uri(URI.create(urlPais))
-                .header(
-                        "Authorization",
-                        "Bearer " + apiKeyRestCountries
-                )
+                .header("Authorization", "Bearer " + apiKeyRestCountries)
                 .GET()
                 .build();
-
 
         HttpResponse<String> responsePais = client.send(
                 requestPais,
@@ -247,21 +233,10 @@ public class GeoLocationService {
         );
 
 
-        // Logs temporários
-        System.out.println("Status RestCountries: " + responsePais.statusCode());
-        System.out.println("Resposta RestCountries:");
-        System.out.println(responsePais.body());
-
-
         String nomePais = null;
         String codigoMoeda = null;
 
-
-        // =========================================================
-        // Verifica se a API respondeu corretamente
-        // =========================================================
-
-        if (responsePais.statusCode() == 200) {
+        try {
 
             RestCountriesResponseDTO dadosPais =
                     gson.fromJson(
@@ -269,55 +244,29 @@ public class GeoLocationService {
                             RestCountriesResponseDTO.class
                     );
 
-
-            // Pega o primeiro país encontrado
-            if (dadosPais.getData() != null &&
-                    dadosPais.getData().getObjects() != null &&
-                    !dadosPais.getData().getObjects().isEmpty()) {
+            if (dadosPais.getData() != null
+                    && dadosPais.getData().getObjects() != null
+                    && !dadosPais.getData().getObjects().isEmpty()) {
 
                 RestCountriesResponseDTO.CountryInfo pais =
-                        dadosPais.getData()
-                                .getObjects()
-                                .get(0);
-
-
-                // =================================================
-                // Nome do país
-                // =================================================
+                        dadosPais.getData().getObjects().get(0);
 
                 if (pais.getNames() != null) {
-
                     nomePais = pais.getNames().getCommon();
                 }
 
-
-                // =================================================
-                // Moeda
-                // =================================================
-
-                if (pais.getCurrencies() != null &&
-                        !pais.getCurrencies().isEmpty()) {
+                if (pais.getCurrencies() != null
+                        && !pais.getCurrencies().isEmpty()) {
 
                     codigoMoeda =
-                            pais.getCurrencies()
-                                    .keySet()
-                                    .iterator()
-                                    .next();
+                            pais.getCurrencies().get(0).getCode();
                 }
             }
 
-
-        } else {
-
-            // =====================================================
-            // Fallback caso Rest Countries falhe
-            // =====================================================
+        } catch (IllegalStateException e) {
 
             PaisFallback fallback =
-                    ListaPaisesFallback.buscar(
-                            localizacao.getCountry()
-                    );
-
+                    ListaPaisesFallback.buscar(localizacao.getCountry());
 
             if (fallback != null) {
 
@@ -329,8 +278,9 @@ public class GeoLocationService {
                 System.out.println(
                         "Aviso de cobertura: país '" +
                                 localizacao.getCountry() +
-                                "' não está na lista de fallback. " +
-                                "Nome completo e moeda não disponíveis."
+                                "' não está na lista de fallback " +
+                                "(API externa indisponível no momento). " +
+                                "Nome completo e moeda não disponíveis nessa consulta."
                 );
             }
         }
