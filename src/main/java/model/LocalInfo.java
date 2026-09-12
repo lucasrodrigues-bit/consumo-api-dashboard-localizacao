@@ -86,20 +86,38 @@ public class LocalInfo {
      * o resultado da busca de forma legível no console durante os testes.
      */
     @Override
-    public String toString(){
-        return
-                "country='" + country + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                ", state='" + state + '\'' +
-                ", region='" + region + '\'' +
-                ", regionName='" + regionName + '\'' +
-                ", city='" + city + '\'' +
-                ", cep='" + cep + '\'' +
-                ", neighborhood='" + neighborhood + '\'' +
-                ", street='" + street + '\'' +
-                ", timezone='" + timezone + '\'' +
-                ", lat=" + lat +
-                ", lon=" + lon +
-                "Currency:"+currency;
+    public String toString() {
+        return String.format(
+                """
+                ===== Informações do Local =====
+                País: %s
+                Código do país: %s
+                Estado: %s
+                Região: %s
+                Região (nome): %s
+                Cidade: %s
+                CEP: %s
+                Bairro: %s
+                Rua: %s
+                Fuso horário: %s
+                Latitude: %s
+                Longitude: %s
+                Moeda: %s
+                ================================
+                """,
+                country,
+                countryCode,
+                state,
+                region,
+                regionName,
+                city,
+                cep,
+                neighborhood,
+                street,
+                timezone,
+                lat,
+                lon,
+                currency
+        );
     }
 }
