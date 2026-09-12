@@ -1,48 +1,64 @@
-import service.GeoLocationService;
-import service.WeatherService;
-import service.CurrencyService;
-import model.LocalInfo;
-import model.WeatherInfo;
 import model.CambioInfo;
+import model.FeriadoInfo;
+import model.LocalInfo;
+import model.ResultadoConsulta;
+import model.WeatherInfo;
+import service.CurrencyService;
+import service.GeoLocationService;
+import service.HolidayService;
+import service.WeatherService;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import service.HolidayService;
-import model.FeriadoInfo;
-
 public class Application {
+
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
+
         GeoLocationService geoService = new GeoLocationService();
         WeatherService weatherService = new WeatherService();
         CurrencyService currencyService = new CurrencyService();
         HolidayService holidayService = new HolidayService();
 
         try {
-            System.out.println("Digite o ip,cep(Brasil) ou nome da cidade desejada:");
+
+            System.out.println("Faça sua pesquisa de localidades:");
             String localidade = input.nextLine();
 
-            // 1º: resolve a localização — essa é a base pra tudo que vem depois
+            // Busca informações sobre o local
             LocalInfo local = geoService.buscarLocal(localidade);
-            System.out.println(local);
 
-            // 2º: usa a cidade já resolvida (não pede de novo pro usuário)
-            WeatherInfo clima = weatherService.DadosMeteorologicos(local.getCity());
-            System.out.println(clima);
+            // Busca informações meteorológicas
+            WeatherInfo clima =
+                    weatherService.DadosMeteorologicos(local.getCity());
 
-            // 3º: usa a moeda já resolvida (BRL fixo se for CEP, código do país se for IP)
-            CambioInfo cambio = currencyService.ConversorDeMoedas(local.getCurrency());
-            System.out.println(cambio);
+            // Busca informações de câmbio
+            CambioInfo cambio =
+                    currencyService.ConversorDeMoedas(local.getCurrency());
 
-            FeriadoInfo feriado = holidayService.buscarFeriados(local.getCountryCode());
-            System.out.println(feriado);
+            // Busca informações sobre feriados
+            FeriadoInfo feriado =
+                    holidayService.buscarFeriados(local.getCountryCode());
+
+            // Junta todas as informações
+            ResultadoConsulta resultado = new ResultadoConsulta(
+                    local,
+                    clima,
+                    cambio,
+                    feriado
+            );
+
+            // Exibe o resultado completo
+            System.out.println(resultado);
 
         } catch (Exception e) {
-            System.out.println("Deu erro: " + e.getMessage());
-        }
 
+            System.out.println("Deu erro: " + e.getMessage());
+
+        } finally {
+
+            input.close();
+        }
     }
 }
