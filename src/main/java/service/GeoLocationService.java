@@ -47,7 +47,9 @@ public class GeoLocationService {
     private LocalInfo buscarPorIp(String ip) throws IOException, InterruptedException {
 
         //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
-        HttpClient client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
 
 
         //Condição que se não for passado nenhum ip,usará o da própria pessoa
@@ -107,7 +109,9 @@ public class GeoLocationService {
 
 
         //Criando HttpCliente "Carteiro" sabe como entregar dados e trazer respostas de volta
-        HttpClient client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
 
         //Enviando envelope(Request)
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create( "https://brasilapi.com.br/api/cep/v1/"+cep)).GET().build();
@@ -145,14 +149,24 @@ public class GeoLocationService {
     }
 
     private LocalInfo buscarPorNome(String nome) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
-        String apiKey = System.getenv("OPENWEATHER_API_KEY");
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+        String apiKeyOpenWeather = System.getenv("OPENWEATHER_API_KEY");
+        String apiKeyRestCountries = System.getenv("REST_COUNTRIES_API_KEY");
 
         // 1º: nome -> lat/lon/countryCode, via Geocoding API do OpenWeather
         String cidadeCodificadaParaUrl = URLEncoder.encode(nome, StandardCharsets.UTF_8);
-        String urlGeocoding = "https://api.openweathermap.org/geo/1.0/direct?q=" + cidadeCodificadaParaUrl + "&limit=1&appid=" + apiKey;
+        String urlGeocoding = "https://api.openweathermap.org/geo/1.0/direct?q=" + cidadeCodificadaParaUrl + "&limit" +
+                "=1&appid=" + apiKeyOpenWeather;
         HttpRequest requestGeo = HttpRequest.newBuilder().uri(URI.create(urlGeocoding)).GET().build();
         HttpResponse<String> responseGeo = client.send(requestGeo, HttpResponse.BodyHandlers.ofString());
+
+
+        //logs temporários para corrigir erro
+        System.out.println("Status OpenWeather: " + responseGeo.statusCode());
+        System.out.println("Resposta OpenWeather:");
+        System.out.println(responseGeo.body());
 
         Gson gson = new Gson();
         GeocodingResponseDTO[] resultadosGeo = gson.fromJson(responseGeo.body(), GeocodingResponseDTO[].class);
@@ -163,9 +177,23 @@ public class GeoLocationService {
         GeocodingResponseDTO localizacao = resultadosGeo[0];
 
         // 2º: countryCode -> moeda oficial do país, via restcountries.com (com fallback se falhar)
-        String urlPais = "https://restcountries.com/v3.1/alpha/" + localizacao.getCountry() + "?fields=name,currencies";
-        HttpRequest requestPais = HttpRequest.newBuilder().uri(URI.create(urlPais)).GET().build();
+        String urlPais =
+                "https://api.restcountries.com/countries/v5?q=" +
+                        URLEncoder.encode(localizacao.getCountry(), StandardCharsets.UTF_8);
+
+        HttpRequest requestPais = HttpRequest.newBuilder()
+                .uri(URI.create(urlPais))
+                .header("Authorization", "Bearer"+apiKeyRestCountries)
+                .GET()
+                .build();
+
         HttpResponse<String> responsePais = client.send(requestPais, HttpResponse.BodyHandlers.ofString());
+
+        //logs temporários para corrigir erro
+        System.out.println("Status RestCountries: " + responsePais.statusCode());
+        System.out.println("Resposta RestCountries:");
+        System.out.println(responsePais.body());
+
 
         String nomePais = null;
         String codigoMoeda = null;
