@@ -1,7 +1,6 @@
 package model.dto.Local;
 
 import java.util.List;
-import java.util.Map;
 
 public class RestCountriesResponseDTO {
 
@@ -23,13 +22,13 @@ public class RestCountriesResponseDTO {
     public static class CountryInfo {
 
         private NameInfo names;
-        private Map<String, CurrencyDetail> currencies;
+        private List<CurrencyDetail> currencies;
 
         public NameInfo getNames() {
             return names;
         }
 
-        public Map<String, CurrencyDetail> getCurrencies() {
+        public List<CurrencyDetail> getCurrencies() {
             return currencies;
         }
     }
@@ -45,8 +44,13 @@ public class RestCountriesResponseDTO {
 
     public static class CurrencyDetail {
 
+        private String code;
         private String name;
         private String symbol;
+
+        public String getCode() {
+            return code;
+        }
 
         public String getName() {
             return name;
